@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exercice d&#x27;entraînement — Appliquer le dispositif</title>
+<style>
+
+:root{--prune:#8C1E70;--prune-fonce:#5E1349;--prune-clair:#F4E6EE;--accent:#C77BAA;
+ --vert:#283C28;--gris:#3C3C3C;--gris-moyen:#8A7A85;--filet:#E8DCE5;--creme:#FAF6F8;
+ --ok:#2F7A4F;--ko:#B23B3B;--amb:#B5852A;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--creme);color:var(--gris);
+ font-family:"Nunito","Segoe UI",Helvetica,Arial,sans-serif;font-size:16px;line-height:1.62}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px 60px}
+header.bandeau{background:var(--prune-fonce);color:#fff;padding:18px 0;border-bottom:4px solid var(--accent)}
+header.bandeau .wrap{padding-bottom:0}
+.chapitre{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#EAD3E3}
+.chapitre span{color:var(--accent);margin:0 6px}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:27px;line-height:1.25;margin:8px 0 4px;color:#fff}
+.sous{color:#EAD3E3;font-size:14.5px;margin:0}
+h2{font-family:Georgia,"Times New Roman",serif;font-size:20px;color:var(--prune-fonce);
+ margin:34px 0 0;padding-bottom:8px;border-bottom:2px solid var(--filet)}
+h2 .num{color:var(--accent);margin-right:8px}
+h3{font-size:15px;color:var(--vert);margin:20px 0 8px;letter-spacing:.02em}
+.carte{background:#fff;border:1px solid var(--filet);border-radius:10px;padding:20px 22px;margin:18px 0;
+ box-shadow:0 1px 2px rgba(94,19,73,.05)}
+.enc{background:var(--prune-clair);border-left:5px solid var(--prune);padding:14px 18px;
+ border-radius:0 8px 8px 0;margin:18px 0;font-size:15.2px}
+.enc .t{display:block;font-size:11.5px;letter-spacing:.11em;text-transform:uppercase;
+ font-weight:800;color:var(--prune-fonce);margin-bottom:6px}
+.enc.al{background:#FBF4F4;border-left-color:var(--ko)}.enc.al .t{color:var(--ko)}
+.enc.ci{background:#FCF8F0;border-left-color:var(--amb)}.enc.ci .t{color:#8A6418}
+.situ{background:#FCF9FB;border:1px dashed var(--filet);border-radius:8px;padding:16px 18px;margin:16px 0;font-size:15.2px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.duo>div{background:#fff;border:1px solid var(--filet);border-radius:9px;padding:15px 17px;font-size:14.8px}
+.duo .h{font-weight:800;color:var(--prune-fonce);margin-bottom:7px;font-size:14.5px}
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.tri>div{background:#fff;border:1px solid var(--filet);border-radius:9px;padding:14px 15px;font-size:14.3px}
+.quad{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
+.quad>div{background:#fff;border:1px solid var(--filet);border-radius:9px;padding:12px 13px;font-size:13.6px}
+.quad .h{font-weight:800;color:var(--prune-fonce);margin-bottom:6px;font-size:13px;
+ text-transform:uppercase;letter-spacing:.04em}
+.tri .h{font-weight:800;color:var(--prune-fonce);margin-bottom:6px;font-size:13.5px;
+ text-transform:uppercase;letter-spacing:.05em}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14.8px;background:#fff}
+th,td{border:1px solid var(--filet);padding:9px 12px;text-align:left}
+thead th{background:var(--prune-clair);color:var(--prune-fonce);font-size:13.5px}
+tbody th{font-weight:600;color:var(--gris)}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.tot td,tr.tot th{background:#FBF3F8;font-weight:800;color:var(--prune-fonce)}
+.dl{display:inline-flex;align-items:center;gap:9px;background:var(--prune);color:#fff;text-decoration:none;
+ padding:11px 20px;border-radius:8px;font-weight:700;font-size:15px;margin:20px 0 4px}
+.dl:hover{background:var(--prune-fonce)}
+ol.q{padding-left:0;list-style:none;counter-reset:q}
+ol.q>li{margin:16px 0;padding-left:38px;position:relative}
+ol.q>li::before{counter-increment:q;content:counter(q);position:absolute;left:0;top:1px;
+ width:26px;height:26px;border-radius:50%;background:var(--prune-clair);color:var(--prune-fonce);
+ font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+b,strong{color:var(--vert)}
+footer{text-align:center;font-size:12.5px;color:var(--gris-moyen);padding:26px 18px 12px;
+ border-top:1px solid var(--filet);margin-top:44px}
+@media(max-width:860px){.quad{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.duo,.tri,.quad{grid-template-columns:1fr}h1{font-size:22px}}
+@media print{body{background:#fff}.dl{display:none}header.bandeau{background:#5E1349 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+
+.champ{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:11px 0;
+ padding:11px 13px;background:#FCF9FB;border:1px solid var(--filet);border-radius:9px}
+.champ .lb{flex:1 1 340px;font-size:15px}
+.champ .pts{font-size:12px;color:var(--gris-moyen);white-space:nowrap}
+input.num,select.ch{font-family:inherit;font-size:15px;padding:9px 12px;border:1.5px solid var(--filet);
+ border-radius:8px;background:#fff;color:var(--gris);min-width:210px}
+input.num{min-width:150px;text-align:right;font-variant-numeric:tabular-nums}
+input.num:focus,select.ch:focus{outline:none;border-color:var(--prune)}
+input.num:disabled,select.ch:disabled{background:#F1EBEF;color:var(--gris-moyen);cursor:not-allowed}
+.champ.just{border-color:#BFE0CC;background:#F3FAF5}
+.champ.faux{border-color:#EFC9C9;background:#FDF5F5}
+.verdict{font-weight:800;font-size:13px;white-space:nowrap}
+.verdict.ok{color:var(--ok)}.verdict.ko{color:var(--ko)}
+.btn{display:inline-flex;align-items:center;gap:9px;background:var(--prune);color:#fff;border:0;
+ padding:12px 22px;border-radius:8px;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer}
+.btn:hover{background:var(--prune-fonce)}
+.btn:disabled{background:#C9B7C3;cursor:not-allowed}
+.btn.sec{background:#fff;color:var(--prune-fonce);border:1.5px solid var(--filet)}
+.btn.sec:hover{background:var(--prune-clair)}
+.barre{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:16px}
+.fige{display:inline-block;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:800;
+ color:var(--prune-fonce);background:var(--prune-clair);padding:6px 11px;border-radius:20px}
+.corr{display:none;margin-top:16px}.corr.on{display:block}
+.score{display:flex;flex-wrap:wrap;gap:18px;align-items:baseline;
+ background:var(--prune-fonce);color:#fff;border-radius:10px;padding:18px 22px;margin:18px 0}
+.score .gros{font-family:Georgia,serif;font-size:32px;font-weight:700;color:#fff}
+.score .lib{font-size:14px;color:#EAD3E3}
+.opt{display:block;background:#fff;border:1.5px solid var(--filet);border-radius:9px;
+ padding:11px 14px;margin:8px 0;font-size:15px;cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt input{margin-right:10px}
+.opt.sel{border-color:var(--prune);background:var(--prune-clair)}
+.opt.bonne{border-color:var(--ok);background:#F3FAF5}
+.opt.mauvaise{border-color:var(--ko);background:#FDF5F5}
+.opt.verrou{cursor:not-allowed}
+.qbloc{background:#fff;border:1px solid var(--filet);border-radius:10px;padding:18px 20px;margin:16px 0}
+.qnum{font-size:11.5px;letter-spacing:.11em;text-transform:uppercase;font-weight:800;color:var(--accent)}
+.qth{display:inline-block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:800;
+ color:var(--prune-fonce);background:var(--prune-clair);padding:4px 9px;border-radius:20px;margin-left:8px}
+.qen{font-size:16.5px;font-weight:700;color:var(--vert);margin:8px 0 4px}
+.multi{font-size:12.5px;color:var(--gris-moyen);font-style:italic;margin-bottom:6px}
+.prog{height:8px;background:var(--filet);border-radius:20px;overflow:hidden;margin:14px 0 4px}
+.prog i{display:block;height:100%;background:var(--prune);width:0;transition:width .25s}
+.sticky{position:sticky;bottom:0;background:var(--creme);padding:12px 0;border-top:1px solid var(--filet)}
+@media print{.btn,.sticky{display:none}}
+
+
+.phrase{flex:1 1 360px;font-size:15.5px}
+.phrase .trou{display:inline-block;min-width:70px;border-bottom:2px dotted var(--accent);text-align:center;color:var(--accent);font-weight:800}
+select.ch{min-width:170px}
+
+.redac{width:100%;font-family:inherit;font-size:15px;line-height:1.6;padding:12px 14px;border:1.5px solid var(--filet);
+ border-radius:9px;background:#fff;color:var(--gris);resize:vertical;margin-top:8px}
+.redac:focus{outline:none;border-color:var(--prune)}
+.redac:disabled{background:#F1EBEF;color:var(--gris-moyen)}
+.cpt{font-size:12.5px;color:var(--gris-moyen);margin-top:5px}
+.modele{display:none;margin-top:12px}.modele.on{display:block}
+.auto label{display:block;background:#fff;border:1.5px solid var(--filet);border-radius:9px;padding:9px 13px;margin:7px 0;font-size:14.8px;cursor:pointer}
+.auto input{margin-right:9px}
+.qr{font-weight:700;color:var(--vert);margin:6px 0 0}
+</style></head>
+<body>
+<header class="bandeau"><div class="wrap">
+ <div class="chapitre">Éthique et déontologie <span>/</span> Module 5</div><h1>Appliquer le dispositif</h1><p class="sous">Exercice d'entraînement — 5 ateliers, correction immédiate · 24 points</p>
+</div></header>
+<div class="wrap">
+
+<div class="carte">
+<div class="enc"><span class="t">CE QUE VOUS ALLEZ FAIRE</span>4 ateliers notés, du bénéficiaire effectif au gel des avoirs, puis une restitution écrite. <b>Une fois un atelier validé, vos réponses sont figées</b> et la correction s'affiche : lisez-la avant de passer au suivant. À la fin, un bilan se télécharge : déposez-le sur la plateforme de formation.</div>
+<div class="enc ci"><span class="t">CONSEIL</span>Gardez la fiche mémo ouverte pour les deux premiers ateliers. Les deux suivants et la restitution se font sans support.</div>
+</div>
+
+<div id="ateliers"></div>
+<div id="final"></div>
+
+<div class="barre sticky">
+ <button class="btn sec" id="rejouer">↻ Recommencer l'exercice</button>
+ <span style="font-size:13px;color:var(--gris-moyen)">Le rejeu efface toutes les réponses et les corrections.</span>
+</div>
+
+<footer>TMK Performances - N° Siret : 49841924100027 - Code NAF : 8559A</footer>
+</div>
+<script>
+const EX = [
+ {
+  "titre": "Atelier 1 — Bénéficiaire effectif ?",
+  "sub": "Art. R. 561-1 CMF · 6 personnes",
+  "consigne": "La SAS Horizon demande un crédit. Pour chaque personne, dites si elle est bénéficiaire effectif.",
+  "champs": [
+   {
+    "id": "a0q0",
+    "lb": "Mme Diallo détient directement 40 % du capital.",
+    "options": [
+     "Bénéficiaire effectif",
+     "Pas bénéficiaire effectif"
+    ],
+    "rep": 0,
+    "pts": 1,
+    "ex": "Plus de 25 % en direct."
+   },
+   {
+    "id": "a0q1",
+    "lb": "M. Garnier détient directement 10 % du capital.",
+    "options": [
+     "Bénéficiaire effectif",
+     "Pas bénéficiaire effectif"
+    ],
+    "rep": 1,
+    "pts": 1,
+    "ex": "Moins de 25 %, sans contrôle par un autre moyen."
+   },
+   {
+    "id": "a0q2",
+    "lb": "M. Roche détient 100 % de la société Alpha, qui détient 30 % d'Horizon.",
+    "options": [
+     "Bénéficiaire effectif",
+     "Pas bénéficiaire effectif"
+    ],
+    "rep": 0,
+    "pts": 1,
+    "ex": "Détention indirecte de plus de 25 % : bénéficiaire effectif."
+   },
+   {
+    "id": "a0q3",
+    "lb": "La société Beta détient 20 % du capital.",
+    "options": [
+     "Bénéficiaire effectif",
+     "Pas bénéficiaire effectif"
+    ],
+    "rep": 1,
+    "pts": 1,
+    "ex": "Une société n'est jamais bénéficiaire effectif : on cherche une personne physique. Ici, 20 % ne suffisent pas."
+   },
+   {
+    "id": "a0q4",
+    "lb": "Mme Klein ne détient aucune part mais nomme, selon un pacte d'associés, la majorité du conseil.",
+    "options": [
+     "Bénéficiaire effectif",
+     "Pas bénéficiaire effectif"
+    ],
+    "rep": 0,
+    "pts": 1,
+    "ex": "Contrôle par un autre moyen : bénéficiaire effectif."
+   },
+   {
+    "id": "a0q5",
+    "lb": "Le directeur financier salarié, sans parts ni pouvoir de contrôle.",
+    "options": [
+     "Bénéficiaire effectif",
+     "Pas bénéficiaire effectif"
+    ],
+    "rep": 1,
+    "pts": 1,
+    "ex": "Ni détention, ni contrôle."
+   }
+  ]
+ },
+ {
+  "titre": "Atelier 2 — PPE ou non ?",
+  "sub": "Art. R. 561-18 CMF · 6 clients",
+  "consigne": "Pour chaque client, dites s'il est une personne politiquement exposée.",
+  "champs": [
+   {
+    "id": "a1q0",
+    "lb": "Une sénatrice française en exercice.",
+    "options": [
+     "PPE",
+     "Pas PPE"
+    ],
+    "rep": 0,
+    "pts": 1,
+    "ex": "Parlementaire : PPE, qu'elle soit française ou étrangère."
+   },
+   {
+    "id": "a1q1",
+    "lb": "Le fils d'un ministre en fonction.",
+    "options": [
+     "PPE",
+     "Pas PPE"
+    ],
+    "rep": 0,
+    "pts": 1,
+    "ex": "Membre de la famille : PPE."
+   },
+   {
+    "id": "a1q2",
+    "lb": "Un ancien ambassadeur ayant quitté ses fonctions il y a trois ans.",
+    "options": [
+     "PPE",
+     "Pas PPE"
+    ],
+    "rep": 1,
+    "pts": 1,
+    "ex": "Le statut cesse un an après la fin de la fonction, sauf risque persistant apprécié par l'établissement."
+   },
+   {
+    "id": "a1q3",
+    "lb": "L'associé, dans une société commune, d'un chef d'État étranger.",
+    "options": [
+     "PPE",
+     "Pas PPE"
+    ],
+    "rep": 0,
+    "pts": 1,
+    "ex": "Personne étroitement associée : PPE."
+   },
+   {
+    "id": "a1q4",
+    "lb": "Le directeur d'une agence bancaire locale.",
+    "options": [
+     "PPE",
+     "Pas PPE"
+    ],
+    "rep": 1,
+    "pts": 1,
+    "ex": "Fonction sans exposition politique."
+   },
+   {
+    "id": "a1q5",
+    "lb": "Un général de l'armée de terre en activité.",
+    "options": [
+     "PPE",
+     "Pas PPE"
+    ],
+    "rep": 0,
+    "pts": 1,
+    "ex": "Officier général : PPE."
+   }
+  ]
+ },
+ {
+  "titre": "Atelier 3 — Déclaration et confidentialité",
+  "sub": "Art. L. 561-15 et L. 561-18 CMF · 6 pratiques",
+  "consigne": "Pour chaque pratique, dites si elle est conforme.",
+  "champs": [
+   {
+    "id": "a2q0",
+    "lb": "Le conseiller dit au client : « Je vais devoir faire un signalement, désolé. »",
+    "options": [
+     "Conforme",
+     "Non conforme"
+    ],
+    "rep": 1,
+    "pts": 1,
+    "ex": "Interdiction de divulgation : 22 500 € d'amende."
+   },
+   {
+    "id": "a2q1",
+    "lb": "Le conseiller transmet son analyse au correspondant Tracfin par la voie interne.",
+    "options": [
+     "Conforme",
+     "Non conforme"
+    ],
+    "rep": 0,
+    "pts": 1,
+    "ex": "C'est le circuit prévu."
+   },
+   {
+    "id": "a2q2",
+    "lb": "Le conseiller attend d'avoir la preuve d'une infraction avant d'alerter.",
+    "options": [
+     "Conforme",
+     "Non conforme"
+    ],
+    "rep": 1,
+    "pts": 1,
+    "ex": "Le soupçon suffit."
+   },
+   {
+    "id": "a2q3",
+    "lb": "Le conseiller demande au client des justificatifs de l'origine d'un virement important.",
+    "options": [
+     "Conforme",
+     "Non conforme"
+    ],
+    "rep": 0,
+    "pts": 1,
+    "ex": "Demander des justificatifs est normal et peut se dire."
+   },
+   {
+    "id": "a2q4",
+    "lb": "Une copie de la déclaration est classée dans le dossier du client.",
+    "options": [
+     "Conforme",
+     "Non conforme"
+    ],
+    "rep": 1,
+    "pts": 1,
+    "ex": "La déclaration est confidentielle et ne figure jamais dans le dossier du client."
+   },
+   {
+    "id": "a2q5",
+    "lb": "Le client demande s'il a fait l'objet d'une déclaration ; le conseiller ne confirme ni n'infirme.",
+    "options": [
+     "Conforme",
+     "Non conforme"
+    ],
+    "rep": 0,
+    "pts": 1,
+    "ex": "Aucune confirmation, dans un sens ou dans l'autre."
+   }
+  ]
+ },
+ {
+  "titre": "Atelier 4 — Que faites-vous ?",
+  "sub": "Dispositif complet · 6 situations",
+  "consigne": "Pour chaque situation, choisissez la conduite à tenir.",
+  "champs": [
+   {
+    "id": "a3q0",
+    "lb": "Le nom d'un nouveau client apparaît sur le registre national des gels.",
+    "options": [
+     "Je demande des justificatifs et je trace",
+     "Je transmets au correspondant Tracfin",
+     "Je gèle et l'établissement informe la DG Trésor",
+     "Rien de particulier"
+    ],
+    "rep": 2,
+    "pts": 1,
+    "ex": "Gel immédiat et information de la DG Trésor."
+   },
+   {
+    "id": "a3q1",
+    "lb": "Un client salarié reçoit une prime exceptionnelle de 8 000 € de son employeur, bulletin de paie à l'appui.",
+    "options": [
+     "Je demande des justificatifs et je trace",
+     "Je transmets au correspondant Tracfin",
+     "Je gèle et l'établissement informe la DG Trésor",
+     "Rien de particulier"
+    ],
+    "rep": 3,
+    "pts": 1,
+    "ex": "Opération cohérente et justifiée."
+   },
+   {
+    "id": "a3q2",
+    "lb": "Un client verse 50 000 € sur son assurance-vie et dit qu'ils viennent d'une succession, sans plus de précision.",
+    "options": [
+     "Je demande des justificatifs et je trace",
+     "Je transmets au correspondant Tracfin",
+     "Je gèle et l'établissement informe la DG Trésor",
+     "Rien de particulier"
+    ],
+    "rep": 0,
+    "pts": 1,
+    "ex": "On demande l'acte de notoriété ou l'attestation du notaire, et on trace."
+   },
+   {
+    "id": "a3q3",
+    "lb": "Le même client refuse de produire le moindre justificatif et retire sa demande.",
+    "options": [
+     "Je demande des justificatifs et je trace",
+     "Je transmets au correspondant Tracfin",
+     "Je gèle et l'établissement informe la DG Trésor",
+     "Rien de particulier"
+    ],
+    "rep": 1,
+    "pts": 1,
+    "ex": "Refus de justifier, opération abandonnée : la tentative peut se déclarer. On transmet au correspondant."
+   },
+   {
+    "id": "a3q4",
+    "lb": "Une société cliente refuse d'indiquer qui détient son capital.",
+    "options": [
+     "Je demande des justificatifs et je trace",
+     "Je transmets au correspondant Tracfin",
+     "Je gèle et l'établissement informe la DG Trésor",
+     "Rien de particulier"
+    ],
+    "rep": 1,
+    "pts": 1,
+    "ex": "Impossible d'identifier le bénéficiaire effectif : pas d'entrée en relation, et examen d'une déclaration."
+   },
+   {
+    "id": "a3q5",
+    "lb": "Un emprunteur annonce un apport de 70 000 € venant d'un compte à l'étranger dont il ne connaît pas l'origine.",
+    "options": [
+     "Je demande des justificatifs et je trace",
+     "Je transmets au correspondant Tracfin",
+     "Je gèle et l'établissement informe la DG Trésor",
+     "Rien de particulier"
+    ],
+    "rep": 0,
+    "pts": 1,
+    "ex": "Premier temps : justificatifs. Si l'explication manque, transmission au correspondant."
+   }
+  ]
+ },
+ {
+  "titre": "Atelier 5 — Avec vos mots",
+  "sub": "Restitution écrite · 2 questions · non notée",
+  "consigne": "Répondez sans support. Comparez ensuite avec la réponse modèle et cochez les points que vous aviez.",
+  "redac": [
+   {
+    "q": "Un client vous demande : « Vous n'allez pas me dénoncer à Tracfin, au moins ? » Que répondez-vous, et pourquoi ?",
+    "modele": "Je ne confirme ni n'infirme rien. Je lui explique que la réglementation m'impose de connaître l'origine des fonds et de documenter ses opérations, comme pour tout client, et je lui redemande les justificatifs. Révéler l'existence d'une déclaration, ou même laisser entendre qu'elle existe, est interdit et puni de 22 500 € d'amende.",
+    "points": [
+     "Ni confirmation ni infirmation",
+     "Rappel neutre de l'obligation de vigilance",
+     "Nouvelle demande de justificatifs",
+     "Interdiction de divulgation, 22 500 €"
+    ]
+   },
+   {
+    "q": "Décrivez les étapes de l'entrée en relation avec une société.",
+    "modele": "J'identifie la société et son représentant, je vérifie l'extrait Kbis, les statuts et la pièce d'identité du représentant. Je remonte la chaîne de détention jusqu'aux personnes physiques qui détiennent plus de 25 % ou contrôlent la société, et je consulte le registre des bénéficiaires effectifs. Je vérifie si l'un d'eux est PPE ou figure sur une liste de gel. Je recueille l'objet de la relation et l'origine des fonds, j'attribue un niveau de risque, et je conserve le tout cinq ans.",
+    "points": [
+     "Identification et vérification de la société et du représentant",
+     "Bénéficiaires effectifs au-delà de 25 %",
+     "Registre des bénéficiaires effectifs",
+     "Filtrage PPE et gels",
+     "Objet de la relation, niveau de risque, conservation 5 ans"
+    ]
+   }
+  ]
+ }
+];
+const REFLEXES = "① Chercher la personne physique, au-delà de 25 %. ② La PPE inclut sa famille et ses proches. ③ Le soupçon se transmet en interne, jamais au client. ④ Le gel est immédiat.";
+
+const TOTAL = EX.reduce((s,a)=>s+(a.redac?0:a.champs.reduce((t,c)=>t+c.pts,0)),0);
+const NOTES = EX.filter(a=>!a.redac).length;
+const etat = EX.map(()=>({valide:false,score:0,auto:null}));
+const MIN = 40;
+function phrase(lb){ return lb.replace('…','<span class="trou">…</span>'); }
+function rendre(){
+  document.getElementById('ateliers').innerHTML = EX.map((a,i)=>{
+    if(a.redac){
+      return `<h2><span class="num">${i+1} ·</span>${a.titre}</h2>
+      <div class="carte" id="at${i}"><p style="font-size:14.5px;color:var(--gris-moyen);margin-top:0">${a.sub}</p>
+      <div class="situ">${a.consigne}</div>
+      ${a.redac.map((r,k)=>`<div class="qbloc"><div class="qr">${r.q}</div>
+        <textarea class="redac" id="r${i}_${k}" rows="4" placeholder="Votre réponse, avec vos mots…"></textarea>
+        <div class="cpt" id="cpt${i}_${k}">0 caractère — ${MIN} au minimum</div>
+        <div class="modele" id="m${i}_${k}"><div class="enc"><span class="t">RÉPONSE MODÈLE</span>${r.modele}</div>
+        <div class="auto"><div class="multi">Cochez les points que votre réponse contenait :</div>
+        ${r.points.map((p,j)=>`<label><input type="checkbox" id="p${i}_${k}_${j}"> ${p}</label>`).join('')}</div></div></div>`).join('')}
+      <div class="barre"><button class="btn" id="btn${i}">Valider mes réponses</button>
+        <span class="pts">Atelier non noté : auto-évaluation</span><span id="fige${i}"></span></div></div>`;
+    }
+    const pts = a.champs.reduce((t,c)=>t+c.pts,0);
+    return `
+    <h2><span class="num">${i+1} ·</span>${a.titre}</h2>
+    <div class="carte" id="at${i}">
+      <p style="font-size:14.5px;color:var(--gris-moyen);margin-top:0">${a.sub}</p>
+      <div class="situ">${a.consigne}</div>
+      ${a.champs.map(c=>`
+        <div class="champ" id="ch_${c.id}">
+          <span class="phrase">${phrase(c.lb)}</span>
+          <select class="ch" id="${c.id}"><option value="">— choisir —</option>${c.options.map((o,j)=>`<option value="${j}">${o}</option>`).join('')}</select>
+          <span class="pts">${c.pts} pt</span>
+          <span class="verdict" id="v_${c.id}"></span>
+        </div>`).join('')}
+      <div class="barre">
+        <button class="btn" id="btn${i}">Valider l'atelier ${i+1}</button>
+        <span class="pts">Atelier noté sur ${pts} points</span>
+        <span id="fige${i}"></span>
+      </div>
+    </div>`;
+  }).join('');
+  EX.forEach((a,i)=>{
+    document.getElementById('btn'+i).addEventListener('click',()=>valider(i));
+    if(a.redac) a.redac.forEach((r,k)=>document.getElementById(`r${i}_${k}`).addEventListener('input',e=>{
+      const n=e.target.value.trim().length;
+      document.getElementById(`cpt${i}_${k}`).textContent = n+(n>1?' caractères':' caractère')+(n<MIN?' — encore '+(MIN-n):' — longueur suffisante');}));
+  });
+}
+function valider(i){
+  if(etat[i].valide) return;
+  const a = EX[i];
+  if(a.redac){
+    for(let k=0;k<a.redac.length;k++){ const el=document.getElementById(`r${i}_${k}`);
+      if(el.value.trim().length<MIN){ alert('Rédigez au moins '+MIN+' caractères pour chaque question avant de valider.'); el.focus(); return; } }
+    a.redac.forEach((r,k)=>{ document.getElementById(`r${i}_${k}`).disabled=true; document.getElementById(`m${i}_${k}`).classList.add('on'); });
+    etat[i] = {valide:true, score:0, auto:'en_cours'};
+    const b=document.getElementById('btn'+i); b.textContent="Valider mon auto-évaluation";
+    b.onclick=null; b.replaceWith(b.cloneNode(true));
+    document.getElementById('btn'+i).addEventListener('click',()=>{
+      let n=0,t=0; a.redac.forEach((r,k)=>r.points.forEach((p,j)=>{t++; const c=document.getElementById(`p${i}_${k}_${j}`); if(c.checked)n++; c.disabled=true;}));
+      etat[i].auto=n+' / '+t; const bb=document.getElementById('btn'+i); bb.textContent='Atelier validé'; bb.disabled=true;
+      document.getElementById('fige'+i).innerHTML='<span class="fige">Réponses figées</span>'; bilan(); });
+    return;
+  }
+  for(const c of a.champs){
+    const el = document.getElementById(c.id);
+    if(el.value===''){ alert("Répondez à toutes les lignes de l'atelier avant de valider."); el.focus(); return; }
+  }
+  let score = 0;
+  a.champs.forEach(c=>{
+    const el = document.getElementById(c.id);
+    const juste = parseInt(el.value,10) === c.rep;
+    if(juste) score += c.pts;
+    el.disabled = true;
+    document.getElementById('ch_'+c.id).classList.add(juste?'just':'faux');
+    const v = document.getElementById('v_'+c.id);
+    v.className = 'verdict ' + (juste?'ok':'ko');
+    v.textContent = juste ? '✓ juste' : '✗ attendu : ' + c.options[c.rep];
+    if(c.ex){ const d=document.createElement('div'); d.className='expl'; d.innerHTML=c.ex; document.getElementById('ch_'+c.id).after(d); }
+  });
+  etat[i] = {valide:true, score:score};
+  const b = document.getElementById('btn'+i);
+  b.textContent = 'Atelier validé'; b.disabled = true;
+  document.getElementById('fige'+i).innerHTML = '<span class="fige">Réponses figées</span>';
+  bilan();
+}
+function bilan(){
+  const faits = etat.filter(e=>e.valide && e.auto!=='en_cours').length;
+  if(faits < EX.length){
+    document.getElementById('final').innerHTML =
+      `<div class="carte"><div class="enc"><span class="t">AVANCEMENT</span>${faits} atelier${faits>1?'s':''} sur ${EX.length} validé${faits>1?'s':''}.</div></div>`;
+    return;
+  }
+  const s = etat.reduce((t,e)=>t+e.score,0);
+  const pct = Math.round(s/TOTAL*100);
+  let mot;
+  if(pct>=90) mot = "Les notions du module sont en place. Vous pouvez passer au QCM.";
+  else if(pct>=70) mot = "L'essentiel est acquis. Relisez dans la fiche mémo la partie de l'atelier où vous avez perdu le plus de points, puis passez au QCM.";
+  else if(pct>=50) mot = "Plusieurs notions restent fragiles. Reprenez la fiche mémo et l'exemple commenté, refaites l'exercice, puis passez au QCM.";
+  else mot = "Reprenez la vidéo et la fiche mémo avant de refaire l'exercice.";
+  document.getElementById('final').innerHTML = `
+   <h2><span class="num">${EX.length+1} ·</span>Votre bilan</h2>
+   <div class="score"><span class="gros">${s} / ${TOTAL}</span><span class="lib">${pct} % — ${NOTES} ateliers notés</span></div>
+   <div class="carte">
+    <table><thead><tr><th>Atelier</th><th>Résultat</th></tr></thead><tbody>
+    ${EX.map((a,i)=>`<tr><td>${a.titre}</td><td class="n">${a.redac?('auto-évaluation : '+etat[i].auto+' points'):(etat[i].score+' / '+a.champs.reduce((t,c)=>t+c.pts,0))}</td></tr>`).join('')}
+    <tr class="tot"><td>Total des ateliers notés</td><td class="n">${s} / ${TOTAL}</td></tr>
+    </tbody></table>
+    <div class="enc"><span class="t">CE QUE VOUS EN FAITES</span>${mot}</div>
+    <div class="enc ci"><span class="t">LES TROIS RÉFLEXES DU MODULE</span>${REFLEXES}</div>
+   </div>`;
+}
+document.getElementById('rejouer').addEventListener('click',()=>{ location.reload(); });
+rendre();
+/* ---------- ajout DA Éthique : identité (360Learning) et bilan téléchargeable ----------
+   Même logique que les QCM IOBSP : l'écran d'identité est sauté si l'URL porte ?lms=1.
+   Une fois tous les ateliers validés, un bilan HTML nominatif se télécharge : c'est le
+   document que le stagiaire dépose dans 360Learning. */
+const CFG = {
+ "CODE": "ethique_deontologie_m5_exercice",
+ "BANDEAU": "Éthique et déontologie · Module 5",
+ "TITRE_BILAN": "Bilan — Exercice d'entraînement — Appliquer le dispositif"
+};
+(function(){
+  const st = document.createElement('style');
+  st.textContent = `#voile{position:fixed;inset:0;background:rgba(40,20,35,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+#voile .ident{background:var(--creme);border-radius:14px;padding:26px 28px;max-width:520px;width:100%}
+#voile .champ{background:#fff;display:flex;gap:10px;align-items:center}#voile .lb{min-width:70px;font-weight:700}
+#voile input{flex:1;padding:8px 10px;border:1px solid var(--filet);border-radius:7px;font:inherit}
+.qnum{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gris-moyen);font-weight:800}
+.qen{font-family:Fraunces,Georgia,serif;font-size:21px;color:var(--prune-fonce);margin:4px 0 8px}
+.expl{font-size:13.5px;color:var(--gris);background:#fff;border-left:3px solid var(--filet);padding:6px 12px;margin:-4px 0 10px 0}`;
+  document.head.appendChild(st);
+})();
+const IDENT = {actif:false, nom:'', prenom:''};
+function contexteLms(){ const p = new URLSearchParams(window.location.search); return p.get('lms') === '1' || p.get('contexte') === 'lms'; }
+function ecranIdentite(){
+  if(contexteLms()) return;
+  const v = document.createElement('div'); v.id = 'voile';
+  v.innerHTML = `<div class="ident"><div class="qnum">Avant de commencer</div><div class="qen">Identifiez-vous</div>
+    <p style="font-size:14.5px;color:var(--gris-moyen);margin:0 0 14px">Votre nom et votre prénom figureront sur le bilan que vous téléchargerez à la fin, et que vous déposerez sur la plateforme.</p>
+    <div class="champ"><span class="lb">Nom</span><input id="idNom"></div>
+    <div class="champ"><span class="lb">Prénom</span><input id="idPrenom"></div>
+    <div class="barre"><button class="btn" id="idOk">Commencer l'exercice</button><span id="idErr" class="verdict ko"></span></div></div>`;
+  document.body.appendChild(v);
+  const ok = () => { const n = document.getElementById('idNom').value.trim(), p = document.getElementById('idPrenom').value.trim();
+    if(n.length < 2 || p.length < 2){ document.getElementById('idErr').textContent = 'Renseignez votre nom et votre prénom.'; return; }
+    IDENT.actif = true; IDENT.nom = n; IDENT.prenom = p; v.remove(); };
+  document.getElementById('idOk').addEventListener('click', ok);
+  v.addEventListener('keydown', e => { if(e.key === 'Enter') ok(); });
+  document.getElementById('idNom').focus();
+}
+let BILAN_FAIT = false;
+const bilanOrig = bilan;
+bilan = function(){
+  bilanOrig();
+  const faits = etat.filter(e=>e.valide && e.auto!=='en_cours').length;
+  if(faits < EX.length) return;
+  const f = document.getElementById('final');
+  if(!document.getElementById('telBilan')){
+    f.insertAdjacentHTML('beforeend', `<div class="carte"><div class="enc ci"><span class="t">VOTRE BILAN</span>Le bilan de l'exercice s'est téléchargé : déposez-le sur la plateforme de formation pour attester de votre travail.</div>
+     <div class="barre"><button class="btn sec" id="telBilan">⬇ Télécharger à nouveau le bilan</button></div></div>`);
+    document.getElementById('telBilan').addEventListener('click', telechargerBilan);
+  }
+  if(!BILAN_FAIT){ BILAN_FAIT = true; telechargerBilan(); }
+};
+function telechargerBilan(){
+  const d = new Date();
+  const dd = d.toLocaleDateString('fr-FR') + ' à ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  const s = etat.reduce((t,e)=>t+e.score,0), pct = Math.round(s/TOTAL*100);
+  const esc = x => String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  const ateliers = EX.map((a,i)=>{
+    if(a.redac) return `<h2>${a.titre}</h2><p><i>Auto-évaluation : ${etat[i].auto} points</i></p>` + a.redac.map((r,k)=>
+      `<div class="q op"><p><b>${r.q}</b></p><p style="white-space:pre-wrap">${esc(document.getElementById('r'+i+'_'+k).value)}</p><p><b>Réponse modèle.</b> ${r.modele}</p></div>`).join('');
+    return `<h2>${a.titre} — ${etat[i].score} / ${a.champs.reduce((t,c)=>t+c.pts,0)}</h2>` + a.champs.map(c=>{
+      const v = parseInt(document.getElementById(c.id).value,10), j = v === c.rep;
+      return `<div class="q ${j?'':'ko'}"><div class="et">${j?'juste':'erreur'}</div><p><b>${c.lb}</b></p><p>Votre réponse : ${c.options[v]}</p>${j?'':'<p>Réponse attendue : <b>'+c.options[c.rep]+'</b></p>'}${c.ex?'<p>'+c.ex+'</p>':''}</div>`; }).join('');
+  }).join('');
+  const doc = `<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><title>${CFG.TITRE_BILAN}</title><style>
+body{font-family:Nunito,Segoe UI,Arial,sans-serif;background:#FAF6F8;color:#3C3C3C;margin:0;line-height:1.6}.w{max-width:860px;margin:0 auto;padding:0 18px 50px}
+header{background:#5E1349;color:#fff;padding:20px 0;border-bottom:4px solid #C77BAA}h1{font-family:Georgia,serif;font-size:24px;margin:6px 0}
+h2{font-family:Georgia,serif;font-size:19px;color:#5E1349;border-bottom:2px solid #E8DCE5;padding-bottom:7px;margin-top:30px}
+.k{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:#EAD3E3}.sc{background:#5E1349;color:#fff;border-radius:10px;padding:16px 20px;margin:16px 0;font-family:Georgia,serif;font-size:26px}
+.sc small{font-family:Nunito,Arial,sans-serif;font-size:14px;color:#EAD3E3;display:block}
+.q{background:#fff;border:1px solid #E8DCE5;border-left:5px solid #2F7A4F;border-radius:8px;padding:10px 16px;margin:10px 0}.q.ko{border-left-color:#B23B3B}.q.op{border-left-color:#B5852A}
+.et{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:#2F7A4F}.q.ko .et{color:#B23B3B}
+footer{text-align:center;font-size:12.5px;color:#8A7A85;border-top:1px solid #E8DCE5;margin-top:36px;padding-top:18px}</style></head><body>
+<header><div class="w"><div class="k">${CFG.BANDEAU}</div><h1>${CFG.TITRE_BILAN}</h1><div class="k">Passage du ${dd}</div>
+${IDENT.actif ? '<div class="k">'+esc(IDENT.prenom)+' '+esc(IDENT.nom)+'</div>' : ''}</div></header><div class="w">
+<div class="sc">${s} / ${TOTAL}<small>${pct} % sur les ateliers notés</small></div>${ateliers}
+<footer>TMK Performances - N° Siret : 49841924100027 - Code NAF : 8559A</footer></div></body></html>`;
+  const b = new Blob([doc],{type:'text/html;charset=utf-8'}), a = document.createElement('a');
+  a.href = URL.createObjectURL(b);
+  a.download = 'Bilan_' + CFG.CODE + (IDENT.actif ? '_' + IDENT.nom.replace(/[^A-Za-zÀ-ÿ-]/g,'') : '') + '_' + d.toISOString().slice(0,10) + '.html';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+}
+ecranIdentite();
+
+</script>
+</body></html>
